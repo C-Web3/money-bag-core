@@ -19,7 +19,7 @@ contract BFFDistributor is
     // BFFToken to be the underlying award
     address public immutable BFFToken;
 
-    mapping (address => mapping (uint256 => uint256)) claimedAmount;
+    mapping (address => mapping (uint256 => uint256)) public claimedAmount;
 
     // This event is triggered whenever a call to #allocation succeeds.
     event Allocation(uint256 _totalAllocation);
