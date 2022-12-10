@@ -5,7 +5,7 @@ import progress from 'cli-progress';
 import { ethers } from "hardhat";
 import * as params from "../config/params.json";
 
-async function genSign(signer: any, address: string, batch: number, maxQty: number) {
+async function genSign(signer: any, address: string, batch: number, maxQty: string) {
   const messageHash = ethers.utils.solidityKeccak256([ "address", "uint256", "uint256" ], [ address, batch, maxQty ]);
   const signature = await signer.signMessage(ethers.utils.arrayify(messageHash));
   return signature
@@ -30,10 +30,10 @@ async function main() {
   for(let i=0; i<allWhitelist; i++) {
     bar1.increment();
     const user = snapshot["list"][i];
-    let signature: string = await genSign(addrs[0], user.address, user.batch, user.maxQty);
+    let signature: string = await genSign(addrs[0], user.address.toLowerCase(), user.batch, ethers.utils.parseUnits(user.maxQty.toString(), 'ether').toString());
     
     result.push({
-      address: user.address,
+      address: user.address.toLowerCase(),
       batch: user.batch,
       maxQty: ethers.utils.parseUnits(user.maxQty.toString(), 'ether').toString(),
       signature: signature
