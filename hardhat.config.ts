@@ -24,7 +24,7 @@ function getNetworks(): NetworksUserConfig {
   return {
     hardhat: {
       forking: {
-        url: `https://polygon-mumbai.g.alchemy.com/v2/${alchemyApiKey}`,
+        url: `https://polygon-mainnet.g.alchemy.com/v2/${alchemyApiKey}`,
         //blockNumber: 15966650,
         enabled: true,
       },
