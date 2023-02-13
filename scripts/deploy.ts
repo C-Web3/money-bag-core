@@ -1,23 +1,24 @@
-import { ethers, upgrades } from "hardhat";
+import 'dotenv/config';
+import { ethers } from "hardhat";
 import * as params from "../config/params.json";
 
 async function main() {
   let addrs = await ethers.getSigners();
   
-  console.log("Deploying contracts with the account:", addrs[0].address);
-  console.log("Account balance:", (await addrs[0].getBalance()).toString());
+  const wallet = new ethers.Wallet(`${process.env.PROJECT_PK}`, ethers.provider)
+  
+  console.log("Deploying contracts with the account:", wallet.address);
+  console.log("Account balance:", (await wallet.getBalance()).toString());
 
-  const DistributorContract = await ethers.getContractFactory("BFFDistributor", addrs[0]);
-  const distributor = await DistributorContract.deploy(params.address.BFFCoinMumbai);
+  const DistributorContract = await ethers.getContractFactory("BFFDistributor", wallet);
+  const distributor = await DistributorContract.deploy(params.address.BFFCoin, {nonce: 1, gasPrice: ethers.utils.parseUnits('300', 'gwei')});
   await distributor.deployed();
   console.log("Contract address:", distributor.address);
-
-  /*
-  const erc20 = await ethers.getContractFactory("BFFCoin", addrs[0]);
-  const BFFCoin = await upgrades.deployProxy(erc20, ["BFFCoin", "BFFC", ethers.utils.parseEther('10000000')]);
+  
+  /*const erc20 = await ethers.getContractFactory("BFFCoin", wallet);
+  const BFFCoin = await erc20.deploy(ethers.utils.parseEther('10000000'), {nonce: 0, gasPrice: ethers.utils.parseUnits('300', 'gwei')});
   await BFFCoin.deployed();
-  console.log("Token address:", BFFCoin.address);
-  */
+  console.log("Token address:", BFFCoin.address);*/
 }
 
 // We recommend this pattern to be able to use async/await everywhere
